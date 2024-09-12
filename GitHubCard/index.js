@@ -1,3 +1,4 @@
+
 /* Step 1: using axios, send a GET request to the following URL 
            (replacing the palceholder with your Github name):
            https://api.github.com/users/<your name>
@@ -23,8 +24,16 @@
           Using that array, iterate over it, requesting data for each user, creating a new card for each
           user, and adding that card to the DOM.
 */
+//start
 
-const followersArray = [];
+const followersArray = [
+  'https://api.github.com/users/tetondan',  
+  'https://api.github.com/users/dustinmyers',
+  'https://api.github.com/users/justsml',
+  'https://api.github.com/users/luishrd',
+  'https://api.github.com/users/bigknell',
+];
+
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -53,3 +62,70 @@ const followersArray = [];
   luishrd
   bigknell
 */
+const cards = document.querySelector('.cards');
+
+
+function cardProfile ({avatar_url, name, login, location, html_url, followers, following, bio}) {
+  const gitCard = document.createElement('div');
+  const userImage = document.createElement('img');
+  const cardInfo = document.createElement('div');
+  const nameEl = document.createElement('h3');
+  const userName = document.createElement('p');
+  const locationEl = document.createElement('p');
+  const profile = document.createElement('p');
+  const address = document.createElement('a');
+  const followersEl = document.createElement('p');
+  const followingEl = document.createElement('p');
+  const bioEl = document.createElement('p');
+
+  userImage.src = avatar_url;
+  nameEl.textContent = name;
+  userName.textContent = login;
+  locationEl.textContent = location;
+  address.href = html_url;
+  address.textContent = html_url;
+  followersEl.textContent = followers;
+  followingEl.textContent = following;
+  bioEl.textContent = bio;
+
+  //classlist
+  gitCard.classList.add('card');
+  cardInfo.classList.add('card-info');
+  nameEl.classList.add('name');
+  userName.classList.add('username');
+
+  //appends
+  gitCard.appendChild(userImage);
+  gitCard.appendChild(cardInfo);
+  cardInfo.appendChild(nameEl);
+  cardInfo.appendChild(userName);
+  cardInfo.appendChild(locationEl);
+  cardInfo.appendChild(profile);
+  profile.appendChild(address);
+  cardInfo.appendChild(followersEl);
+  cardInfo.appendChild(followingEl);
+  cardInfo.appendChild(bioEl);
+
+  console.log(gitCard);
+  
+  return gitCard;
+}
+
+
+axios
+  .get(`https://api.github.com/users/CodeBlack32`)
+   .then((res) => {
+    const data = res.data;
+     const card = cardProfile({...data});
+     cards.appendChild(card);
+   });
+
+ followersArray.forEach(function(followerUrl) {
+  axios
+  .get(followerUrl)
+   .then((res) => {
+    const data = res.data;
+     const card = cardProfile({...data});
+     cards.appendChild(card);
+   });
+ }) 
